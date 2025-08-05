@@ -1,8 +1,18 @@
-let messageBox = document.getElementById("welcome-message")
-if (messageBox) {
-    let currentUserName = "Zahra"
-    messageBox.textContent = `Welcome: ${currentUserName}`
+const messageBox = document.getElementById("welcome-message")
+const nameInput = document.getElementById("nameInput")
+const setNameBtn = document.getElementById("setNameBtn")
+
+if (messageBox && nameInput && setNameBtn) {
+    setNameBtn.addEventListener("click", () => {
+        const userName = nameInput.value.trim()
+        if (userName) {
+            messageBox.textContent = `Welcome, ${userName}!`
+        } else {
+            messageBox.textContent = "Welcome, guest!"
+        }
+    })
 }
+
 
 const statusSpan = document.getElementById("status")
 const statusInput = document.getElementById("studentStatus")
@@ -42,83 +52,115 @@ if (showEmailBtn && showPhoneBtn && hideContactBtn && contactDetails) {
 }
 
 
-const courseList = document.querySelector("#courseList")
-const addCourseBtn = document.querySelector("#addCourseBtn")
+const courseList = document.querySelector("#courseList");
+    const addCourseBtn = document.querySelector("#addCourseBtn");
+    const filterAllBtn = document.querySelector("#filterAll");
+    const filterGrade10Btn = document.querySelector("#filterGrade10");
+    const filterGrade11Btn = document.querySelector("#filterGrade11");
+    const error = document.querySelector("#error");
 
-if (courseList && addCourseBtn) {
-   const courses = ["Math", "English", "History"]
+    
+    const courses = [
+      { name: "Math", grade: "10" },
+      { name: "English", grade: "11" },
+      { name: "History", grade: "10" },
+    ];
 
-   function renderCourse() {
-      courseList.innerHTML = ""
+    let currentFilter = "all";
 
-      courses.forEach((course, index) => {
-         const li = document.createElement("li")
-         li.className = "list-group-item d-flex flex-column gap-1"
+    function renderCourse() {
+      courseList.innerHTML = "";
 
-         const headerDiv = document.createElement("div")
-         headerDiv.className = "d-flex justify-content-between align-items-center"
+      
+      const filteredCourses = currentFilter === "all" ? courses : courses.filter(c => c.grade === currentFilter);
 
-         const courseName = document.createElement("span")
-         courseName.textContent = course
+      filteredCourses.forEach((course, index) => {
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex flex-column gap-1";
+        li.dataset.grade = course.grade; 
 
-         const detailBtn = document.createElement("button")
-         detailBtn.className = "btn btn-outline-success btn-sm"
-         detailBtn.textContent = "Show Details"
+        const headerDiv = document.createElement("div");
+        headerDiv.className = "d-flex justify-content-between align-items-center";
 
-         headerDiv.appendChild(courseName)
-         headerDiv.appendChild(detailBtn)
+        const courseName = document.createElement("span");
+        courseName.textContent = `${course.name} (Grade ${course.grade})`; 
 
-         const detailsDiv = document.createElement("div")
-         detailsDiv.className = "mt-2 p-2 bg-light border border-success rounded shadow-sm text-muted d-none d-flex justify-content-between align-items-center"
+        const detailBtn = document.createElement("button");
+        detailBtn.className = "btn btn-outline-success btn-sm";
+        detailBtn.textContent = "Show Details";
 
-         const detailsText = document.createElement("span")
-         detailsText.textContent = `Details of ${course}`
+        headerDiv.appendChild(courseName);
+        headerDiv.appendChild(detailBtn);
 
-         const closeBtn = document.createElement("button")
-         closeBtn.className = "btn btn-sm btn-outline-danger"
-         closeBtn.innerHTML = "&times;"
+        const detailsDiv = document.createElement("div");
+        detailsDiv.className =
+          "mt-2 p-2 bg-light border border-success rounded shadow-sm text-muted d-none d-flex justify-content-between align-items-center";
 
-        
-         detailBtn.addEventListener("click", () => {
-            detailsDiv.classList.remove("d-none")
-            detailBtn.classList.add("d-none")
-         })
+        const detailsText = document.createElement("span");
+        detailsText.textContent = `Details of ${course.name} for Grade ${course.grade}`;
 
-         closeBtn.addEventListener("click", () => {
-            detailsDiv.classList.add("d-none")
-            detailBtn.classList.remove("d-none")
-         })
+        const closeBtn = document.createElement("button");
+        closeBtn.className = "btn btn-sm btn-outline-danger";
+        closeBtn.innerHTML = "&times;";
 
-         detailsDiv.appendChild(detailsText)
-         detailsDiv.appendChild(closeBtn)
+        detailBtn.addEventListener("click", () => {
+          detailsDiv.classList.remove("d-none");
+          detailBtn.classList.add("d-none");
+        });
 
-         li.appendChild(headerDiv)
-         li.appendChild(detailsDiv)
+        closeBtn.addEventListener("click", () => {
+          detailsDiv.classList.add("d-none");
+          detailBtn.classList.remove("d-none");
+        });
 
-         courseList.appendChild(li)
-      })
-   }
+        detailsDiv.appendChild(detailsText);
+        detailsDiv.appendChild(closeBtn);
 
-   renderCourse()
+        li.appendChild(headerDiv);
+        li.appendChild(detailsDiv);
 
-   addCourseBtn.addEventListener("click", function () {
-      const input = document.querySelector("#courseInput")
-      const error = document.querySelector("#error")
+        courseList.appendChild(li);
+      });
 
-      const newCourse = input.value.trim()
+      if (filteredCourses.length === 0) {
+        courseList.innerHTML = `<li class="list-group-item text-center text-muted">No courses found for Grade ${currentFilter}</li>`;
+      }
+    }
+
+    renderCourse();
+
+    addCourseBtn.addEventListener("click", () => {
+      const input = document.querySelector("#courseInput");
+      const gradeSelect = document.querySelector("#gradeSelect");
+      const newCourse = input.value.trim();
+      const newGrade = gradeSelect.value;
 
       if (newCourse === "") {
-         error.textContent = "Course name cannot be empty!"
-         return
+        error.textContent = "Course name cannot be empty!";
+        return;
       }
 
-      courses.push(newCourse)
-      input.value = ""
-      error.textContent = ""
-      renderCourse()
-   })
-}
+      
+      courses.push({ name: newCourse, grade: newGrade });
+      input.value = "";
+      error.textContent = "";
+      renderCourse();
+    });
 
+    filterAllBtn.addEventListener("click", () => {
+      currentFilter = "all";
+      renderCourse();
+    });
+
+    filterGrade10Btn.addEventListener("click", () => {
+      currentFilter = "10";
+      renderCourse();
+    });
+
+    filterGrade11Btn.addEventListener("click", () => {
+      currentFilter = "11";
+      renderCourse();
+    });
 
 const form = document.querySelector("#contactForm")
 
