@@ -1,3 +1,4 @@
+// بخش اول: پیام خوش آمد
 const messageBox = document.getElementById("welcome-message")
 const nameInput = document.getElementById("nameInput")
 const setNameBtn = document.getElementById("setNameBtn")
@@ -13,12 +14,12 @@ if (messageBox && nameInput && setNameBtn) {
     })
 }
 
-
+// بخش دوم: تغییر وضعیت دانش‌آموز (اصلاح typo و شرط)
 const statusSpan = document.getElementById("status")
-const statusInput = document.getElementById("studentStatus")
+const statusInput = document.getElementById("studentStatus")  // اصلاح نام متغیر اینجا
 const updateStudentsStatus = document.getElementById("updateStudentStatus")
 
-if ( statusSpan && studentStatus && updateStudentsStatus) {
+if (statusSpan && statusInput && updateStudentsStatus) {
     updateStudentsStatus.addEventListener("click", function(){
         let newStatus = statusInput.value.trim()
         if (newStatus !== "") {
@@ -29,6 +30,7 @@ if ( statusSpan && studentStatus && updateStudentsStatus) {
     })
 }
 
+// بخش سوم: نمایش اطلاعات تماس)
 const showEmailBtn = document.getElementById("showEmail")
 const showPhoneBtn = document.getElementById("showPhone")
 const hideContactBtn = document.getElementById("hideContact")
@@ -51,15 +53,16 @@ if (showEmailBtn && showPhoneBtn && hideContactBtn && contactDetails) {
     })
 }
 
-
+// بخش چهارم: دورها
 const courseList = document.querySelector("#courseList");
-    const addCourseBtn = document.querySelector("#addCourseBtn");
-    const filterAllBtn = document.querySelector("#filterAll");
-    const filterGrade10Btn = document.querySelector("#filterGrade10");
-    const filterGrade11Btn = document.querySelector("#filterGrade11");
-    const error = document.querySelector("#error");
+const addCourseBtn = document.querySelector("#addCourseBtn");
+const filterAllBtn = document.querySelector("#filterAll");
+const filterGrade10Btn = document.querySelector("#filterGrade10");
+const filterGrade11Btn = document.querySelector("#filterGrade11");
+const error = document.querySelector("#error");
 
-    
+if (courseList && addCourseBtn && filterAllBtn && filterGrade10Btn && filterGrade11Btn && error) {
+
     const courses = [
       { name: "Math", grade: "10" },
       { name: "English", grade: "11" },
@@ -71,7 +74,6 @@ const courseList = document.querySelector("#courseList");
     function renderCourse() {
       courseList.innerHTML = "";
 
-      
       const filteredCourses = currentFilter === "all" ? courses : courses.filter(c => c.grade === currentFilter);
 
       filteredCourses.forEach((course, index) => {
@@ -140,7 +142,6 @@ const courseList = document.querySelector("#courseList");
         return;
       }
 
-      
       courses.push({ name: newCourse, grade: newGrade });
       input.value = "";
       error.textContent = "";
@@ -162,6 +163,9 @@ const courseList = document.querySelector("#courseList");
       renderCourse();
     });
 
+}
+
+// بخش پنجم: فرم تماس 
 const form = document.querySelector("#contactForm")
 
 if (form) {
